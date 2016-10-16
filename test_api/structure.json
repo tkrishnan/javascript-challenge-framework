@@ -1,40 +1,16 @@
 [
     {
-        "type": "FunctionDeclaration", 
+        "type": "ForStatement",
         "body": [
             {
                 "type": "BlockStatement",
                 "body": [
                     {
-                        "type": "VariableDeclaration", 
-                        "body": []
-                    }, 
-                    {
-                        "type": "ForStatement",
-                        "body": [
-                            {
-                                "type": "BlockStatement",
-                                "body": [
-                                    {
-                                        "type": "IfStatement",
-                                        "body": [
-                                            {
-                                                "type": "ExpressionStatement",
-                                                "body": []
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "type": "ReturnStatement",
-                        "body": []
+                        "type": "VariableDeclaration",
+                        "body": []                        
                     }
                 ]
             }
         ]
-        
     }
 ]

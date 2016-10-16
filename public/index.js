@@ -16,7 +16,6 @@ $(function(){
     });
     
     function analyzeCode(){
-        console.log(input.val());
         var input_html = input.serialize();
         $.ajax({
           type: 'POST', url: '/', data: input_html 
@@ -30,7 +29,9 @@ $(function(){
             for (var i=0; i<messages['blackList'].length; i++){
                 list.push($('<li>', {html: messages['blackList'][i]}));
             }
-            list.push($('<li>', {html: messages['structure']}));
+            if (messages["structure"]){
+                list.push($('<li>', {html: messages['structure']}));    
+            }
             $('#feedback').append(list);
         });        
     }

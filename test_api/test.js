@@ -3,13 +3,13 @@ var whiteList = require('./whiteList.json');
 var blackList = require('./blackList.json');
 var structure = require('./structure.json');
 var whiteDict;
-var whiteAns;
 var blackAns;
+var strucBool;
 
 function reset(){
     whiteDict = {};
-    whiteAns = [];
     blackAns = [];
+    strucBool = false;
 }
 
 function checkWhiteList(type){
@@ -32,20 +32,54 @@ function searchCodeTree(code){
             for (var i=0; i<code.body.length; i++){
                 searchCodeTree(code.body[i]);
             }
-        } else if (code.type == 'IfStatement'){
-            searchCodeTree(code.consequent);
-            if (code.alternate) {
-                searchCodeTree(code.alternate);
-            }
         } else {
             searchCodeTree(code.body);
+        }
+    } else if (code.consequent) {
+        searchCodeTree(code.consequent);
+        if (code.alternate){
+            searchCodeTree(code.alternate);
         }
     }
 }
 
-/*function compareCodeTrees(code, struc, bool){
+function compareTreeNodes(code, struc){
+    if (code.constructor == Array){
+        for (var i=0; i<code.length; i++){
+            compareTreeNodes(code[i], struc);    
+        }
+    } else {
+        if (code.type == struc.type) {
+            checkEqualNodes(code, struc);
+        } else {
+            if (code.body){
+                compareTreeNodes(code.body, struc);
+            } else if (code.consequent){
+                compareTreeNodes(code.consequent, struc);
+                if (code.alternate){
+                    compareTreeNodes(code.alternate, struc);
+                }
+            }
+        }
+    }
+}
 
-}*/
+function checkEqualNodes(code, struc, bool){
+    if (code.type == struc.type) {
+        if (struc.body.length != 0) {
+            if (code.body) {
+                compareTreeNodes(code.body, struc.body[0]);
+            } else if (code.consequent){
+                compareTreeNodes(code.consequent, struc.body[0]);
+                if (code.alternate){
+                    compareTreeNodes(code.alternate, struc.body[0]);
+                }
+            }
+        } else {
+            strucBool = true;
+        }
+    }
+}
 
 function main(js_code){
     reset();
@@ -58,6 +92,7 @@ function main(js_code){
     for (var i=0; i<parsed.length; i++){
         searchCodeTree(parsed[i], whiteDict, blackAns);
     }
+    var whiteAns = [];
     for (var type in whiteDict){
         if (whiteDict.hasOwnProperty(type)){
             if (!whiteDict[type]){
@@ -65,9 +100,14 @@ function main(js_code){
             }
         }
     }
+    compareTreeNodes(parsed, structure[0]);
+    var strucAns;
+    if (!strucBool){
+        strucAns = "Code does not include required structure";
+    }
     answer['whiteList'] = whiteAns;
     answer['blackList'] = blackAns;
-    answer['structure'] = "Code does not include required structure";
+    answer['structure'] = strucAns;
     return answer;
 }
 
