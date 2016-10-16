@@ -50,7 +50,8 @@ terminology:
 * variable declaration: use 'VariableDeclaration'
 * expression statement (expressing a value or functionality without declaring a 
 variable): use 'ExpressionStatement'
-* block statement: use 'BlockStatement'
+* block statement: use 'BlockStatement' (MUST be used after any function 
+declaration, for statement, or while statement)
 * break statement: use 'BreakStatement'
 * for statement: use 'ForStatement'
 * while statement: use 'WhileStatement'
@@ -60,9 +61,10 @@ variable): use 'ExpressionStatement'
 Currently the application does not support being _specific_ about checking the 
 following functionality:
 
+* else or else if statements
 * anonymous function expression
 * 'new' expression to create object instances
-* function call expression
+* function call expression (e.g. console.log("Hello"))
 * algebraic expression
 * array expression
 * object expression

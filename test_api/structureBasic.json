@@ -1,0 +1,16 @@
+[
+    {
+        "type": "ForStatement",
+        "body": [
+            {
+                "type": "BlockStatement",
+                "body": [
+                    {
+                        "type": "VariableDeclaration",
+                        "body": []                        
+                    }
+                ]
+            }
+        ]
+    }
+]
