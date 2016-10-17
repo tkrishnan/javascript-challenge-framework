@@ -35,25 +35,4 @@ $(function(){
             $('#feedback').append(list);
         });        
     }
-
-    // $('form').on('submit', function(e){
-    //     e.preventDefault();
-    //     var form = $(this);
-    //     var formData = form.serialize();
-    //     $.ajax({
-    //       type: 'POST', url: '/', data: formData 
-    //     }).done(function(messages){
-    //         $('#feedback').empty();
-    //         var list = []
-    //         for (var i=0; i<messages['whiteList'].length; i++){
-    //             console.log(messages['whiteList'][i]);
-    //             list.push($('<li>', {html: messages['whiteList'][i]}));
-    //         }
-    //         for (var i=0; i<messages['blackList'].length; i++){
-    //             list.push($('<li>', {html: messages['blackList'][i]}));
-    //         }
-    //         list.push($('<li>', {html: messages['structure']}));
-    //         $('#feedback').append(list);
-    //     });
-    // });
 });

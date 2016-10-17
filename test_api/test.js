@@ -9,9 +9,23 @@ var strucBool;
 
 
 function reset(){
-    whiteDict = {};
     blackAns = [];
     strucBool = false;
+    whiteDict = {};
+    for (var i=0; i<whiteList.length; i++){
+        whiteDict[whiteList[i]] = false;
+    }
+}
+
+function moveDownTree(node, func, args){
+    if (node.body){
+        func(node.body, args);
+    } else if (node.consequent){
+        func(node.consequent, args);
+        if (node.alternate){
+            func(node.alternate, args);
+        }
+    }
 }
 
 function checkWhiteList(type){
@@ -27,122 +41,94 @@ function checkBlackList(type){
 }
 
 function searchCodeTree(code){
-    checkWhiteList(code.type);
-    checkBlackList(code.type);
-    if (code.body) {
-        if (code.type == 'BlockStatement'){
-            for (var i=0; i<code.body.length; i++){
-                searchCodeTree(code.body[i]);
-            }
-        } else {
-            searchCodeTree(code.body);
+    if (code.constructor == Array){
+        for (var i=0; i<code.length; i++){
+            searchCodeTree(code[i]);
         }
-    } else if (code.consequent) {
-        searchCodeTree(code.consequent);
-        if (code.alternate){
-            searchCodeTree(code.alternate);
-        }
+    } else {
+        checkWhiteList(code.type);
+        checkBlackList(code.type);
+        moveDownTree(code, searchCodeTree);
     }
 }
-
 
 function compareTrees(code, struc){
     //if we have multiple nodes in our current code tree level
     if (code.constructor == Array){
-        //to compare trees level by level, make checkList of nodes we are currently
-        //checking for in our structure requirements
-        var checkList = {};
-        var locations = {};
-        for (var i=0; i<struc.length; i++){
-            checkList[struc[i].type] = false;
-            locations[struc[i].type] = 0;
-        }
-        for (var i=0; i<code.length; i++){
-            if (code[i].type in checkList){
-                checkList[code[i].type] = true;
-                locations[code[i].type] = i;
-            }
-        }
-        var allHere = true;
-        //look to see if all nodes in struc reqs were at this code tree level
-        for (var type in checkList){
-            if (!checkList[type]){
-                allHere = false;
-            }
-        }
-        //if they were
-        if (allHere) {
-            //check if rest of levels are equal
-            checkEqualNodes(code, struc, locations);
-        //if they weren't
-        } else {
-            for (var i=0; i<code.length; i++){
-                if (code[i].body){
-                    compareTrees(code[i].body, struc);
-                } else if (code[i].consequent){
-                    compareTrees(code[i].consequent, struc);
-                    if (code[i].alternate){
-                        compareTrees(code[i].alternate, struc);
-                    }
-                }
-            }
-        }
-    //if we have single node at our current code tree level
+        compareNodeLevels(code, struc);
+    //if we have a single node in our current code tree level
     } else {
-        //if we also only have one node we're checking for in our structure reqs
-        if (struc.length == 1){
-            //if same type
-            if (code.type == struc[0].type){
-                checkEqualNodes(code, struc);
-            //if not same type, move on    
-            } else {
-                if (code.body){
-                    compareTrees(code.body, struc);    
-                } else if (code.consequent) {
-                    compareTrees(code.consequent, struc);
-                    if (code.alternate) {
-                        compareTrees(code.alternate, struc);
-                    }
-                }    
-            }
-        //if we have more than one node we're checking for, move on
-        } else{
-            if (code.body){
-                compareTrees(code.body, struc);    
-            } else if (code.consequent) {
-                compareTrees(code.consequent, struc);
-                if (code.alternate) {
-                    compareTrees(code.alternate, struc);
-                }
-            }
-        }
+        compareSingleNodes(code, struc);
     }
 }
 
-function checkEqualNodes(code, struc, locs){
+function compareSingleNodes(code, struc){
+    //if we also only have one node we're checking for in our structure reqs
+    if (struc.length == 1){
+        //if same type
+        if (code.type == struc[0].type){
+            checkEqualSingleNodes(code, struc);
+        //if not same type, move on    
+        } else {
+            moveDownTree(code, compareTrees, struc);
+        }
+    //if we have more than one node we're checking for, move on
+    } else{
+        moveDownTree(code, compareTrees, struc);
+    }    
+}
+
+function compareNodeLevels(code, struc){
+    //make checkList of nodes we are currently checking for in our structure reqs
+    var checkList = {};
+    var locations = {};
+    for (var i=0; i<struc.length; i++){
+        checkList[struc[i].type] = false;
+        locations[struc[i].type] = 0;
+    }
+    //for each node in this current level, check if it's in checklist
+    for (var i=0; i<code.length; i++){
+        if (code[i].type in checkList){
+            checkList[code[i].type] = true;
+            locations[code[i].type] = i;
+        }
+    }
+    //look to see if all nodes in struc reqs were at this code tree level
+    var allHere = true;
+    for (var type in checkList){
+        if (!checkList[type]){
+            allHere = false;
+            break;
+        }
+    }
+    //if they were, check if levels below these are equal
+    if (allHere) {
+        checkEqualNodeLevels(code, struc, locations);
+    //if they weren't, move onto levels in code tree below current level
+    } else {
+        for (var i=0; i<code.length; i++){
+            moveDownTree(code[i]. compareTrees, struc);
+        }
+    }    
+}
+
+function checkEqualSingleNodes(code, struc){
+    if (struc[0].body.length != 0){
+        moveDownTree(code, compareTrees, struc[0].body);
+    } else {
+        strucBool = true;
+        return;
+    }
+}
+
+function checkEqualNodeLevels(code, struc, locs){
     var done = true;
     for (var i=0; i<struc.length; i++){
         if (struc[i].body.length != 0){
             done = false;
             if (locs){
                 var j = locs[struc[i].type];
-                if (code[j].body){
-                    compareTrees(code[j].body, struc[i].body);
-                } else if (code[j].consequent) {
-                    compareTrees(code[j].consequent, struc[i].body);
-                    if (code[j].alternate){
-                        compareTrees(code[j].alternate, struc[i].body);
-                    }
-                }
-            } else {
-                if (code.body){
-                    compareTrees(code.body, struc[i].body);
-                } else if (code.consequent){
-                    compareTrees(code.consequent, struc[i].body);
-                    if (code.alternate){
-                        compareTrees(code.alternate, struc[i].body);
-                    }
-                } 
+                moveDownTree(code[j], compareTrees, struc[i].body);
             }
         }
     }
@@ -157,18 +143,11 @@ function main(js_code){
     reset();
     var answer = {};
     var parsed = esprima.parse(js_code, {tolerant: true}).body;
-    for (var i=0; i<whiteList.length; i++){
-        whiteDict[whiteList[i]] = false;
-    }
-    for (var i=0; i<parsed.length; i++){
-        searchCodeTree(parsed[i], whiteDict, blackAns);
-    }
+    searchCodeTree(parsed);
     var whiteAns = [];
     for (var type in whiteDict){
-        if (whiteDict.hasOwnProperty(type)){
-            if (!whiteDict[type]){
-                whiteAns.push("Code MUST include a "+type);
-            }
+        if (!whiteDict[type]){
+            whiteAns.push("Code MUST include a "+type);
         }
     }
     compareTrees(parsed, structure);
