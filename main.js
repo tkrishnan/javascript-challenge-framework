@@ -8,12 +8,21 @@ var test_api = require('./test_api/test.js');
 //set port
 app.set('port', (process.env.PORT || 3000));
 
-//serve static assets normally
-app.use('/', express.static(path.join(__dirname, 'public')));
+//set view engine
+app.set('view engine', 'ejs');
 
-//for every other route, serve up index.html
-app.get('*', function(request, response){
-  response.redirect(301, path.resolve(__dirname, 'public', 'index.html'));
+//set where views are stored
+app.set('views', path.join(__dirname, 'views'));
+
+//serve up static files here
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function(request, response){
+    response.render('pages/index');    
+});
+
+app.get('/about', function(request, response){
+   response.render('pages/about'); 
 });
 
 //receiving user's javascript input

@@ -6,6 +6,7 @@ $(function(){
     
     input.keyup(function(){
         clearTimeout(timer);
+        $('#feedback').empty();
         if (input.val()){
             timer = setTimeout(analyzeCode, timeout);
         }
@@ -20,7 +21,6 @@ $(function(){
         $.ajax({
           type: 'POST', url: '/', data: input_html 
         }).done(function(messages){
-            $('#feedback').empty();
             var list = [];
             for (var i=0; i<messages['whiteList'].length; i++){
                 console.log(messages['whiteList'][i]);

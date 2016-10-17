@@ -1,0 +1,13 @@
+body {
+    background-color: #555;
+    color: white;
+}
+
+.header {
+    margin-top: 5px;
+    color: white;
+}
+
+#code_input{
+    max-width: 100%;
+}

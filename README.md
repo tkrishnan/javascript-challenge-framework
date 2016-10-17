@@ -74,5 +74,26 @@ following functionality:
 However, the above functionality often falls under the same categories of 
 expression statements and variable declarations, which can be checked for.
 
+##Next Steps
+
+If I had more time, I would have focused on completing the following next steps:
+
+* Being able to check for 'else if' and 'else' statements: this would require 
+some additional, more specific code as far as traversing through Esprima's 
+parser's syntax tree output, since these these statements are not organized in 
+the tree in the way that 'if' statements are
+* Being able to check for the aformentioned specific types of expression 
+statements: like checking for 'else if' and 'else' statements, this requires some 
+more specific code for traversing Esprima's parser's syntax tree output
+* Providing more specific structural feedback: currently the app just tells you 
+if the structure requirements have not been met
+* Display syntax erorrs in the interface: currently if there are syntax errors in 
+the javascript, the parser logs the errors on the server side and continues, but
+it would be nice to throw these errors up on the interface as well
+* Hooking up a code editor for the web interface: this would allow more ease for 
+writing in and formatting input
+* Improving the overall web interface: improving the interface aesthetic, as well 
+as working on making the interface more mobile friendly
+
 
 

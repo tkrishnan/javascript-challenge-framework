@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS CDN -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Bootstrap Optional Theme -->
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">-->
+        <link rel="stylesheet" href="stylesheets/application.css"/>
+        <title>Javascript Challenge Framework</title>
+    </head>
+    <body>
+        <!-- JQuery Library CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>        <!-- Bootstrap JS CDN -->
+        <!-- Bootstrap JS CDN -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- App Content -->
+        <script src="scripts/header.js"></script>
+        <script src="scripts/index.js"></script>
+        <nav class="navbar navbar-inverse">
+            <div class="container">
+                <div class="header navbar-left"><h4>Javascript Challenge Framework</h4></div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="app_link"><a href="/">Application</a></li>
+                    <li id="about_link"><a href="/about">About</a></li>
+                </ul>
+            </div>            
+        </nav>
+        <div id="content" class="container">
+            <div class="row">
+                <div class="page-header">
+                    <h2>About</h2>
+                </div>                
+            </div>
+            <div class="row">
+                <p>This application serves to parse and analyze given Javascript code for supported functionality and structure. The application provides an interface for the user to input Javascript code and receive feedback on whether the code has met certain criteria (whether it includes certain functionality, excludes other kinds of functionality, and whether it has a certain kind of structure).</p>
+            </div>
+            
+            <div class="row">
+                <h3>Parser</h3>
+                <p>
+                    In order to parse the given Javascript input, the fully built Javascript parsers Acorn and Esprima were considered. 
+                </p>
+                <ul>
+                    <li><p><strong>Performance:</strong> Both parsers are relatively fast and perform comparably well without considering location data. However, Acorn performs better when location data is also considered.</p></li>
+                    <li><p><strong>Browser Compatability:</strong> Both parsers are compatable with modern browsers IE10+</p></li>
+                    <li><p><strong>File Size:</strong> Both Esprima and Acorn both seem to be lightweight solutions, however Acorn appears to be more lightweight. </p></li>
+                    <li><p><strong>API-Quality:</strong> The API-Quality for both Esprima and Acorn appear to be rather comparable.</p></li>
+                    <li><p><strong>Documentation:</strong>The documentation for Esprima appears to be better organized, and there appears to be more tutorials from other developers out there.</p></li>
+                </ul>
+                <p>While Acorn has a slight edge when it comes to performance and file size, given the time constraints of the project, this edge is not enough to overlook its lesser documentation and support the project has. Thus Esprima was chosen as the parser for this application.</p>
+            </div>
+            <div class="row">
+                <h3>How to use</h3>
+                <p>In the test_api folder, there are three json files and a test.js file. These three json files are used for users to specify javascript code functionality and structure to check for:</p>
+                <ul>
+                    <li><p><strong>whiteList.json:</strong> A json array of functionality the code MUST have</p></li>
+                    <li><p><strong>blackList.json:</strong> A json array of functionality the code MUST NOT have</p></li>
+                    <li><p><strong>structure.json:</strong> An ordered json array of nested objects and arrays which expresss the tree-like structure of the code</p></li>
+                </ul>
+                <p>The json files have been pre-filled with examples of how the criteria should be provided. The test.js file runs the appropriate code which checks the user input javascript code for the criteria listed in these files.</p>
+                <h4>Terminology</h4>
+                <p>To specify <em>overall</em> functionality and structure to check for, use the following terminology:</p>
+                <ul>
+                    <li>function declaration: use 'FunctionDeclaration'</li>
+                    <li>variable declaration: use 'VariableDeclaration'</li>
+                    <li>expression statement (expressing a value or functionality without declaring a variable): use 'ExpressionStatement'</li>
+                    <li>block statement: use 'BlockStatement' (MUST be used after any function declaration, for statement, or while statement)</li>
+                    <li>break statement: use 'BreakStatement'</li>
+                    <li>for statement: use 'ForStatement'</li>
+                    <li>while statement: use 'WhileStatement'</li>
+                    <li>return statement: use 'ReturnStatement'</li>
+                    <li>if statement: use 'IfStatement'</li>
+                </ul>
+                <p>Currently the application does not support being <em>specific</em> about checking the following functionality:</p>
+                <ul>
+                    <li>'else' or 'else if' statements</li>
+                    <li>anonymous function expression</li>
+                    <li>'new' expression to create object instances</li>
+                    <li>function call expression (e.g. console.log("Hello"))</li>
+                    <li>algebraic expression</li>
+                    <li>array expression</li>
+                    <li>object expression</li>
+                    <li>logical expression</li>
+                    <li>++ or -- (update expression)</li>
+                </ul>
+                <p>However, the above functionality often falls under the same categories of expression statements and variable declarations, which can be checked for.</p>
+            </div>
+            <div class="row">
+                <h3>Next Steps</h3>
+                <p>If I had more time, I would have focused on completing the following next steps:</p>
+                <ul>
+                    <li>Being able to check for 'else if' and 'else' statements: this would require some additional, more specific code as far as traversing through Esprima's parser's syntax tree output, since these these statements are not organized in the tree in the way that 'if' statements are</li>
+                    <li>Being able to check for the aformentioned specific types of expression statements: like checking for 'else if' and 'else' statements, this requires some more specific code for traversing Esprima's parser's syntax tree output</li>
+                    <li>Providing more specific structural feedback: currently the app just tells you if the structure requirements have not been met</li>
+                    <li>Hooking up a code editor for the web interface: this would allow more ease for writing in and formatting input</li>
+                    <li>Improving the overall web interface: improving the interface aesthetic, as well as working on making the interface more mobile friendly</li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
