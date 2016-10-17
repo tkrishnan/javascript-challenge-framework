@@ -107,7 +107,7 @@ function compareNodeLevels(code, struc){
     //if they weren't, move onto levels in code tree below current level
     } else {
         for (var i=0; i<code.length; i++){
-            moveDownTree(code[i]. compareTrees, struc);
+            moveDownTree(code[i], compareTrees, struc);
         }
     }    
 }
